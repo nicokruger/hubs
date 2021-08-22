@@ -114,6 +114,7 @@ function cloneGltf(gltf) {
 }
 
 function getHubsComponents(node) {
+  console.log('???? get components for', node);
   const hubsComponents =
     node.userData.gltfExtensions &&
     (node.userData.gltfExtensions.MOZ_hubs_components || node.userData.gltfExtensions.HUBS_components);
@@ -121,6 +122,36 @@ function getHubsComponents(node) {
   // We can remove support for legacy components when our environment, avatar and interactable models are
   // updated to match Spoke output.
   const legacyComponents = node.userData.components;
+
+  if (node.name.indexOf("Jukebox") == 0) {
+    return {
+      "shadow": {
+        "cast":false,
+        "receive":false
+      },
+      "audio": {
+        "src": "https://playboxcade.com/activity/zz__digitatahubs__/assets/dressedforsuccess.mp3",
+        "controls": true,
+        "autoPlay": false,
+        "loop": true,
+        "audioType": "pannernode",
+        "volume": 1,
+        "distanceModel": "inverse",
+        "rolloffFactor": 1,
+        "refDistance": 1,
+        "maxDistance": 10000,
+        "coneInnerAngle": 360,
+        "coneOuterAngle": 360,
+        "coneOuterGain": 0
+      },
+      "networked": {
+        //"id": "node.uuid"
+        //"id": "jukebox"
+        "id": "jukebox" + node.name.replace(/ /g, '')
+      }
+    }
+
+  }
 
   return hubsComponents || legacyComponents;
 }
@@ -516,6 +547,7 @@ AFRAME.registerComponent("gltf-model-plus", {
   },
 
   init() {
+    console.log('????? register gltf-component-plus');
     // This can be set externally if a consumer wants to do some node preprocssing.
     this.jsonPreprocessor = null;
 
@@ -550,6 +582,7 @@ AFRAME.registerComponent("gltf-model-plus", {
 
       const lastSrc = this.lastSrc;
       this.lastSrc = src;
+      console.log('???!!! GTLF_MODE_PLUS', src);
 
       if (!src) {
         if (this.inflatedEl) {
@@ -570,6 +603,7 @@ AFRAME.registerComponent("gltf-model-plus", {
       this.disposeLastInflatedEl();
 
       this.model = gltf.scene || gltf.scenes[0];
+      //console.log('??????? i have receied model', JSON.stringify(this.model,0,2));
 
       if (this.data.batch) {
         this.el.sceneEl.systems["hubs-systems"].batchManagerSystem.addObject(this.model);
