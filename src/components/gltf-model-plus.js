@@ -124,13 +124,15 @@ function getHubsComponents(node) {
   const legacyComponents = node.userData.components;
 
   if (node.name.indexOf("Jukebox") == 0) {
+    const parts = node.name.split('_')
+    const mp3 = parts[parts.length-1];
     return {
       "shadow": {
         "cast":false,
         "receive":false
       },
       "audio": {
-        "src": "https://playboxcade.com/activity/zz__digitatahubs__/assets/dressedforsuccess.mp3",
+        "src": "https://playboxcade.com/activity/zz__digitatahubs__/assets/" + mp3 + ".mp3",
         "controls": true,
         "autoPlay": false,
         "loop": true,
